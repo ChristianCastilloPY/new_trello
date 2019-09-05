@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+</head>
+<body>
+    <div id="app" class="container mt-5">
+        <div class="row">
+            <div class="col-md-4 mt-3" v-for="(list, index) in lists" :key="index">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <h4>{{list.name}}</h4>
+                            <!-- <button v-if="list.status == 'saved'" class="btn btn-sm btn-danger">
+                                Eliminar
+                            </button> -->
+                            <button :class="list.status == 'creating' ? 'btn-warning' : 'btn-danger'" class="btn btn-sm" @click="removeList(index)">
+                                {{ list.status == 'creating' ? 'Cancelar' : 'Eliminar' }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form @submit.prevent="saveList(list)" action="/">
+                            <div class="form-group" v-if="list.status == 'creating'">
+                                <!-- Inicia componente card -->
+                                <card v-model="list.name"></card>  
+                                <!-- Termina componente card -->
+                            </div>
+                            <button v-if="list.status == 'creating'" class="btn btn-primary btn-block">
+                                Guardar
+                            </button>
+                            <!-- Agregar tarjeta -->
+                            <div class="form-group d-flex" v-for="(card, idx) in list.cards" :key="idx">
+                                <!-- Inicia componente c-input -->
+                                <c-input v-model="card.title" :readonly="card.readonly"></c-input>
+                                <!-- Termina componente c-input -->
+                                <a href="#" style="color:gray; font-size: 1.5rem; text-decoration: none; margin-top: -2px" @click="editTitle(list, idx)" v-if="card.readonly == true">&nbsp <i class="fas fa-edit"></i></a>
+                                <a href="#" style="color:gray;font-size: 1.5rem; text-decoration: none; margin-top: -2px" @click="saveTitle(list, idx)" v-if="card.readonly == false">&nbsp <i class="fas fa-save"></i></a>
+                                <a href="#" style="color:gray;font-size: 1.5rem; text-decoration: none; margin-top: -2px" @click="deleteTitle(list, idx)">&nbsp <i class="fas fa-window-close"></i></a>
+                            </div>
+                            <button v-if="list.status == 'saved'" class="btn btn-success btn-block" @click="addCard(list)">Agregar tarjeta</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <button class="btn rounded-0 btn-outline-dark btn-block" @click="addList">
+                    Agregar lista
+                </button><br>
+            </div>
+        </div>
+    </div>
+
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="module" src="./javascript.js"></script>
+</body>
+
+</html>
